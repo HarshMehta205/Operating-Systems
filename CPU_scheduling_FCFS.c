@@ -1,5 +1,5 @@
 /*
-to write a C program to perfrom CPU scheduling using First Come First Basis
+to write a C program to perform CPU scheduling using First Come First Basis
 */
 
 #include<stdio.h>
