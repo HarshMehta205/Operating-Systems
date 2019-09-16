@@ -1,0 +1,165 @@
+/*
+to write a C program to show CPU scheduling using Shortest Remaining Time Next
+*/
+
+
+#include<stdio.h>
+struct process
+{
+	int name;
+	int at,bt,wt,tat,rt;
+}p[10];
+int i,n;
+void accept(int a)
+{
+	printf("Enter the number of processes: \n");
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{	
+		printf("Enter the process name:(int) \n");
+		scanf("%d",&p[i].name);
+		printf("Enter arrival time: \n");
+		scanf("%d",&p[i].at);
+		printf("Enter burst time: \n");
+		scanf("%d",&p[i].bt);
+		p[i].rt=p[i].bt;
+		p[i].wt=0;			
+		p[i].tat=0;			
+	}
+}
+
+void display(int a)
+{	
+	
+	printf("\n\n\nProcess\tArrival time\tBurst time\tWait Time\tTurnaround\n");
+	for(i=0;i<n;i++)
+	{
+		printf("%d\t%d\t\t%d\t\t%d\t\t%d\n",p[i].name,p[i].at,p[i].bt,p[i].wt,p[i].tat);
+	}
+	
+}
+
+void sort(int a)
+{	
+	int i,j;
+	struct process temp;
+	for(i=0;i<a-1;i++)
+	{
+		for(j=0;j<a-i-1;j++)
+		{
+		if(p[j+1].at<p[j].at)
+		{
+			temp=p[j];
+			p[j]=p[j+1];
+			p[j+1]=temp;
+		}
+		}
+	}
+}
+
+void sjf(int a)
+{
+      int i,time=0,count=0,end=0,smallest=0,total_wt=0,total_tat=0;
+      float avgwt,avgtat;
+      p[9].rt=9999;
+	for(time=0;count!=n;time++)
+	{
+		smallest=9;
+		for(i=0;i<n;i++)
+		{	
+			if(p[i].at<=time && p[i].rt<p[smallest].rt && p[i].rt>0)
+			{	
+				smallest=i;
+			}
+		}
+
+	        p[smallest].rt--;
+		printf("%d<---P%d--->",time,p[smallest].name);
+
+		if(p[smallest].rt == 0)
+		{
+			count++;
+			end=time+1;
+			p[smallest].wt=end-p[smallest].at-p[smallest].bt;
+			p[smallest].tat=end-p[smallest].at;
+			total_wt=total_wt+p[smallest].wt;
+		  	total_tat=total_tat+p[smallest].tat;
+                }
+          }
+   printf("%d",time);
+	display(n);
+	avgwt=total_wt/n;
+	printf("The average waiting time is:%f \n",avgwt);
+	avgtat=total_tat/n;
+	printf("The average turnaround time is:%f \n",avgtat);
+}
+
+int main()
+{
+	accept(n);
+	sort(n);
+        display(n);
+	sjf(n);
+}
+
+
+/*
+
+student@student:~$ gcc sjf_ass.c
+student@student:~$ ./a.out
+Enter the number of processes: 
+5
+Enter the process name:(int) 
+1
+Enter arrival time: 
+4
+Enter burst time: 
+5
+Enter the process name:(int) 
+2
+Enter arrival time: 
+0
+Enter burst time: 
+6
+Enter the process name:(int) 
+3
+Enter arrival time: 
+2
+Enter burst time: 
+4
+Enter the process name:(int) 
+4
+Enter arrival time: 
+7
+Enter burst time: 
+3
+Enter the process name:(int) 
+5
+Enter arrival time: 
+8
+Enter burst time: 
+4
+
+
+
+Process	Arrival time	Burst time	Wait Time	Turnaround
+2	0		6		0		0
+3	2		4		0		0
+1	4		5		0		0
+4	7		3		0		0
+5	8		4		0		0
+0<---P2--->1<---P2--->2<---P2--->3<---P2--->4<---P2--->5<---P2--->6<---P3--->7<---P3--->8<---P3--->9<---P3--->10<---P4--->11<---P4--->12<---P4--->13<---P5--->14<---P5--->15<---P5--->16<---P5--->17<---P1--->18<---P1--->19<---P1--->20<---P1--->21<---P1--->22
+
+
+Process	Arrival time	Burst time	Wait Time	Turnaround
+2	0		6		0		6
+3	2		4		4		8
+1	4		5		13		18
+4	7		3		3		6
+5	8		4		5		9
+The average waiting time is:5.000000 
+The average turnaround time is:9.000000 
+student@student:~$ 
+
+
+*/
